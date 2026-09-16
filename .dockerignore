@@ -1,0 +1,10 @@
+# исключения для сборки backend-образа (контекст сборки – корень проекта)
+frontend
+backend/.venv
+backend/tests
+backend/__pycache__
+backend/.pytest_cache
+model/training
+.git
+**/__pycache__
+**/*.pyc

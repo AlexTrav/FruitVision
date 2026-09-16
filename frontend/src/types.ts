@@ -1,0 +1,27 @@
+// краткая информация о классе на двух языках (ответ /api/classes)
+export interface ClassInfo {
+  en: string
+  ru: string
+}
+
+// одно предсказание модели с уверенностью от 0 до 1
+export interface ClassPrediction {
+  class_en: string
+  class_ru: string
+  confidence: number
+}
+
+// ответ эндпоинта /api/predict
+export interface PredictionResponse {
+  predicted: ClassPrediction
+  top3: ClassPrediction[]
+}
+
+// метаданные модели для страницы "О проекте"
+export interface ModelInfo {
+  image_size: [number, number]
+  preprocessing: string
+  num_classes: number
+  test_accuracy: number
+  architecture: string
+}

@@ -1,0 +1,17 @@
+Тестовые изображения для ручной проверки классификатора FruitVision.
+Источник: Wikimedia Commons (через Wikipedia REST API, originalimage лид-статьи).
+Все файлы сконвертированы в PNG, уменьшены до максимум 1024px по большей стороне.
+
+Фрукты:
+  apple.png       – https://commons.wikimedia.org/wiki/File:Pink_lady_and_cross_section.jpg
+  banana.png      – https://commons.wikimedia.org/wiki/File:Bananavarieties.jpg
+  orange.png      – https://commons.wikimedia.org/wiki/File:Oranges_-_whole-halved-segment.jpg
+  watermelon.png  – https://commons.wikimedia.org/wiki/File:Taiwan_2009_Tainan_City_Organic_Farm_Watermelon_FRD_7962.jpg
+  pineapple.png   – https://commons.wikimedia.org/wiki/File:കൈതച്ചക്ക.jpg
+
+Овощи:
+  carrot.png      – https://i.pinimg.com/originals/82/dd/f1/82ddf1a737aeaceff67e7cb3a41205e8.jpg (заменено вручную — исходный вариант с Wikimedia модель путала с редисом)
+  tomato.png      – https://commons.wikimedia.org/wiki/File:Tomato_je.jpg
+  potato.png      – https://commons.wikimedia.org/wiki/File:Patates.jpg
+  cucumber.png    – https://commons.wikimedia.org/wiki/File:ARS_cucumber.jpg
+  onion.png       – https://commons.wikimedia.org/wiki/File:Mixed_onions.jpg

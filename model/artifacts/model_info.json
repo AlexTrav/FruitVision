@@ -1,0 +1,9 @@
+{
+  "image_size": [
+    224,
+    224
+  ],
+  "preprocessing": "mobilenet_v2.preprocess_input (expects RGB uint8 [0,255] input, scaling handled inside the model)",
+  "num_classes": 36,
+  "test_accuracy": 0.9220055937767029
+}
