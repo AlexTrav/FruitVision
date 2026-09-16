@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// маршруты сайта: главная, классификатор и страница о проекте
+// BASE_URL учитывает --base сборки (например, "/-FruitVision/" на GitHub Pages)
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',

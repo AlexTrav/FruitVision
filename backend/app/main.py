@@ -19,12 +19,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Fruit & Vegetable Classifier API", lifespan=lifespan)
 
-# разрешаем запросы с dev-сервера Vite и из контейнера фронтенда
+# разрешаем запросы с dev-сервера Vite, из контейнера фронтенда и с задеплоенного GitHub Pages
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://alextrav.github.io",
     ],
     allow_methods=["*"],
     allow_headers=["*"],
