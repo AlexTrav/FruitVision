@@ -1,6 +1,6 @@
 # FruitVision
 
-[![CI](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml)
+[![CI](https://github.com/AlexTrav/FruitVision/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexTrav/FruitVision/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Рубежное задание по курсу «Искусственный интеллект и машинное обучение»:
@@ -9,7 +9,7 @@
 
 Автор: **Алексей Нерезов**.
 
-**Живой деплой:** сайт – https://alextrav.github.io/-FruitVision/, API – https://fruitvision-backend.onrender.com
+**Живой деплой:** сайт – https://alextrav.github.io/FruitVision/, API – https://fruitvision-backend.onrender.com
 
 Условие задания: [ТЗ.md](ТЗ.md). Краткое описание решения: [SUMMARY.md](SUMMARY.md).
 
@@ -67,7 +67,7 @@ cd frontend && make install && make dev    # http://localhost:5173
 
 ## Продакшн (живой деплой, бесплатно)
 
-- **Сайт:** https://alextrav.github.io/-FruitVision/ – GitHub Pages, деплоится автоматически
+- **Сайт:** https://alextrav.github.io/FruitVision/ – GitHub Pages, деплоится автоматически
   (`.github/workflows/deploy-pages.yml`) при каждом push в `main`, затрагивающем `frontend/`.
 - **API:** https://fruitvision-backend.onrender.com – Render.com, free-тариф (Docker,
   сборка из корневого `Dockerfile`). Автодеплоится при push в `main` (Render сам следит за веткой).
