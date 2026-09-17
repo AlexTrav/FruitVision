@@ -203,7 +203,7 @@ onMounted(async () => {
           :key="cls.en"
           class="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-sm text-stone-600 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300"
         >
-          {{ pickByLocale(cls.ru, cls.en, cls.kk, locale) }}
+          {{ pickByLocale(cls, locale) }}
         </span>
       </div>
     </section>

@@ -8,11 +8,12 @@ from slowapi.middleware import SlowAPIMiddleware
 from starlette.responses import JSONResponse
 
 from .classes_i18n import CLASS_NAME_KK, CLASS_NAME_RU
-from .config import MAX_UPLOAD_SIZE_BYTES, UNKNOWN_CONFIDENCE_THRESHOLD
-from .gradcam import generate_gradcam_png
-from .inference import InvalidImageError, get_classifier
-from .rate_limit import limiter
+from .config import UNKNOWN_CONFIDENCE_THRESHOLD
+from .ml.gradcam import generate_gradcam_png
+from .ml.inference import InvalidImageError, get_classifier
 from .schemas import ClassInfo, ModelInfo, PredictionResponse
+from .security.dependencies import validated_image
+from .security.rate_limit import limiter
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("fruitvision")
@@ -72,23 +73,11 @@ def model_info() -> ModelInfo:
     return get_classifier().model_info
 
 
-# общая проверка content-type и размера файла для /api/predict и /api/explain
-async def _read_validated_image(file: UploadFile) -> bytes:
-    if file.content_type is None or not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Файл должен быть изображением")
-
-    content = await file.read()
-    if len(content) > MAX_UPLOAD_SIZE_BYTES:
-        raise HTTPException(status_code=400, detail="Файл слишком большой (максимум 8 МБ)")
-
-    return content
-
-
 # основной эндпоинт: принимает изображение и возвращает предсказанный класс
 @app.post("/api/predict", response_model=PredictionResponse)
 @limiter.limit("20/minute")
 async def predict(request: Request, file: UploadFile = File(...)) -> PredictionResponse:
-    content = await _read_validated_image(file)
+    content = await validated_image(file)
 
     classifier = get_classifier()
     try:
@@ -113,7 +102,7 @@ async def predict(request: Request, file: UploadFile = File(...)) -> PredictionR
 @app.post("/api/explain")
 @limiter.limit("10/minute")
 async def explain(request: Request, file: UploadFile = File(...)) -> Response:
-    content = await _read_validated_image(file)
+    content = await validated_image(file)
 
     classifier = get_classifier()
     try:

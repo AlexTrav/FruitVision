@@ -31,10 +31,12 @@ function saveHistory(items: HistoryItem[]) {
   }
 }
 
+// модульный singleton – если добавить запись из одного composable, все места, где вызван
+// usePredictionHistory(), должны увидеть изменение (например, useClassifierResult + сам список)
+const history = ref<HistoryItem[]>(loadHistory())
+
 // история хранится только в браузере пользователя, на сервер не отправляется
 export function usePredictionHistory() {
-  const history = ref<HistoryItem[]>(loadHistory())
-
   function addEntry(entry: HistoryItem) {
     history.value = [entry, ...history.value].slice(0, MAX_ITEMS)
     saveHistory(history.value)

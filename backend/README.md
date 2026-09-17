@@ -87,13 +87,16 @@ make docker-run     # контейнер на http://localhost:8000
 ```
 backend/
   app/
-    main.py        – FastAPI-приложение и эндпоинты
-    inference.py   – загрузка модели и инференс
-    gradcam.py     – Grad-CAM: тепловая карта значимых областей изображения
-    rate_limit.py  – per-IP rate limiting (slowapi)
-    schemas.py     – Pydantic-схемы запросов/ответов
+    main.py         – FastAPI-приложение и эндпоинты
+    schemas.py      – Pydantic-схемы запросов/ответов
     classes_i18n.py – переводы названий классов на русский и казахский
-    config.py      – пути и константы (учитывает MODEL_DIR)
+    config.py       – пути и константы (учитывает MODEL_DIR)
+    ml/
+      inference.py  – загрузка модели и инференс
+      gradcam.py    – Grad-CAM: тепловая карта значимых областей изображения
+    security/
+      rate_limit.py   – per-IP rate limiting (slowapi)
+      dependencies.py – валидация загруженного файла (content-type, размер)
   tests/
     test_api.py    – автотесты эндпоинтов
 ```

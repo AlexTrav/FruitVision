@@ -4,9 +4,9 @@ import json
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from .classes_i18n import to_kk, to_ru
-from .config import CLASS_NAMES_PATH, MODEL_INFO_PATH, MODEL_PATH
-from .schemas import ClassPrediction, ModelInfo
+from ..classes_i18n import to_kk, to_ru
+from ..config import CLASS_NAMES_PATH, MODEL_INFO_PATH, MODEL_PATH
+from ..schemas import ClassPrediction, ModelInfo
 
 
 # отдельный тип ошибки, чтобы main.py мог поймать именно "плохую картинку" и вернуть 400

@@ -4,6 +4,7 @@ import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { useLocale } from '../composables/useLocale'
 import type { PredictionResponse } from '../types'
 import { pickByLocale } from '../utils/localizeClass'
+import { recognitionCardClass } from '../utils/recognitionStyle'
 
 defineProps<{ result: PredictionResponse }>()
 
@@ -19,11 +20,7 @@ function pct(value: number): string {
 <template>
   <div
     class="rounded-3xl border p-6 shadow-sm sm:p-8"
-    :class="
-      result.is_recognized
-        ? 'border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900'
-        : 'border-amber-200 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/30'
-    "
+    :class="recognitionCardClass(result.is_recognized)"
   >
     <!-- уверенность ниже порога – скорее всего, это вообще не фрукт и не овощ из наших 36 классов -->
     <div
@@ -36,7 +33,12 @@ function pct(value: number): string {
 
     <p class="text-sm font-medium text-stone-400 dark:text-stone-500">{{ t('resultCard.looksLike') }}</p>
     <h3 class="mt-1 text-3xl font-semibold text-stone-900 dark:text-stone-50">
-      {{ pickByLocale(result.predicted.class_ru, result.predicted.class_en, result.predicted.class_kk, locale) }}
+      {{
+        pickByLocale(
+          { ru: result.predicted.class_ru, en: result.predicted.class_en, kk: result.predicted.class_kk },
+          locale,
+        )
+      }}
     </h3>
     <p v-if="locale !== 'en'" class="text-sm text-stone-400 dark:text-stone-500">{{ result.predicted.class_en }}</p>
 
@@ -56,7 +58,7 @@ function pct(value: number): string {
       <p class="text-sm font-medium text-stone-500 dark:text-stone-400">{{ t('resultCard.otherOptions') }}</p>
       <div v-for="item in result.top3" :key="item.class_en" class="flex items-center gap-3">
         <span class="w-28 shrink-0 truncate text-sm text-stone-600 sm:w-32 dark:text-stone-300">
-          {{ pickByLocale(item.class_ru, item.class_en, item.class_kk, locale) }}
+          {{ pickByLocale({ ru: item.class_ru, en: item.class_en, kk: item.class_kk }, locale) }}
         </span>
         <div class="h-2 flex-1 overflow-hidden rounded-full bg-stone-100 dark:bg-stone-800">
           <div

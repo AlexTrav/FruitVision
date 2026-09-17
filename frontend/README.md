@@ -37,6 +37,18 @@ Vue 3 + TypeScript + Tailwind CSS. Многостраничный сайт (Vite
 кого-то, кто хорошо знает қазақ тілі, проверить `backend/app/classes_i18n.py` (словарь
 `CLASS_NAME_KK`) и `frontend/src/locales/kk.ts`.
 
+## Тесты
+
+```bash
+npm test   # vitest run
+```
+
+25 тестов (Vitest + Vue Test Utils, `jsdom`): composables (`useTheme`, `useLocale`,
+`usePredictionHistory` – включая проверку, что история остаётся общим состоянием между
+несколькими вызовами, а не независимыми копиями), утилиты (`pickByLocale`, `recognitionCardClass`,
+`translateApiError`) и рендер `ResultCard.vue` (уверенное предсказание vs предупреждение о низкой
+уверенности). Прогоняются в CI (`.github/workflows/ci.yml`) перед сборкой.
+
 ## Запуск локально (без Docker)
 
 ```bash
@@ -80,6 +92,8 @@ make docker-run     # поднять контейнер на http://localhost:80
 - Tailwind CSS 4 (через `@tailwindcss/vite`)
 - Vite 8
 - иконки – [Heroicons](https://heroicons.com) (MIT)
+- vue-i18n (мультиязычность)
+- Vitest + Vue Test Utils (тесты)
 
 ## Сторонние ассеты
 

@@ -44,6 +44,10 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Run tests
+        working-directory: frontend
+        run: npm test
+
       # npm run build уже включает type-check (vue-tsc -b) перед сборкой Vite
       - name: Type-check and build
         working-directory: frontend

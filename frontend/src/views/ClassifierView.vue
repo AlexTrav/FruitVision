@@ -2,37 +2,32 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CameraIcon, ExclamationTriangleIcon, FireIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { explainImage, predictImage } from '../api/client'
 import CameraCapture from '../components/CameraCapture.vue'
 import ResultCard from '../components/ResultCard.vue'
 import UploadDropzone from '../components/UploadDropzone.vue'
+import { useGradcam } from '../composables/useGradcam'
 import { useLocale } from '../composables/useLocale'
+import { usePrediction } from '../composables/usePrediction'
 import { usePredictionHistory } from '../composables/usePredictionHistory'
-import type { PredictionResponse } from '../types'
 import { pickByLocale } from '../utils/localizeClass'
-import { createThumbnail } from '../utils/thumbnail'
+import { recognitionCardClass } from '../utils/recognitionStyle'
 
 const { t } = useI18n()
 const { locale } = useLocale()
 
 const selectedFile = ref<File | null>(null)
 const previewUrl = ref<string | null>(null) // локальный blob-URL для превью картинки
-const isLoading = ref(false)
-const error = ref<string | null>(null)
-const result = ref<PredictionResponse | null>(null)
-
-const heatmapUrl = ref<string | null>(null) // blob-URL Grad-CAM тепловой карты
-const isExplaining = ref(false)
-const explainError = ref<string | null>(null)
-
 const showCamera = ref(false) // показываем живой поток с камеры вместо зоны загрузки
+const selectError = ref<string | null>(null) // ошибка выбора файла (например, не изображение)
 
-const { history, addEntry, clearHistory } = usePredictionHistory()
+const { isLoading, error: predictError, result, predict, reset: resetPrediction } = usePrediction()
+const { heatmapUrl, isExplaining, error: explainError, explain, reset: resetGradcam } = useGradcam()
+const { history, clearHistory } = usePredictionHistory()
 
 // вызывается при выборе файла (drag-and-drop, диалог выбора или снимок с камеры)
 function onSelect(file: File) {
   if (!file.type.startsWith('image/')) {
-    error.value = t('classifier.selectImageError')
+    selectError.value = t('classifier.selectImageError')
     return
   }
 
@@ -50,62 +45,16 @@ function onCameraCapture(file: File) {
 // сбрасывает выбранный файл, превью и предыдущий результат
 function reset() {
   if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
-  if (heatmapUrl.value) URL.revokeObjectURL(heatmapUrl.value)
   selectedFile.value = null
   previewUrl.value = null
-  result.value = null
-  error.value = null
-  heatmapUrl.value = null
-  explainError.value = null
+  selectError.value = null
+  resetPrediction()
+  resetGradcam()
 }
 
-// отправляет изображение на бэкенд, сохраняет ответ модели и добавляет запись в историю
-async function submit() {
-  if (!selectedFile.value) return
-  isLoading.value = true
-  error.value = null
-  result.value = null
-
-  try {
-    result.value = await predictImage(selectedFile.value)
-    const thumbnail = await createThumbnail(selectedFile.value)
-    addEntry({
-      thumbnail,
-      classRu: result.value.predicted.class_ru,
-      classEn: result.value.predicted.class_en,
-      classKk: result.value.predicted.class_kk,
-      confidence: result.value.predicted.confidence,
-      isRecognized: result.value.is_recognized,
-      timestamp: Date.now(),
-    })
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : t('classifier.predictFallbackError')
-  } finally {
-    isLoading.value = false
-  }
-}
-
-// строит Grad-CAM тепловую карту по уже загруженному изображению
-async function showHeatmap() {
-  if (!selectedFile.value) return
-  isExplaining.value = true
-  explainError.value = null
-
-  try {
-    const blob = await explainImage(selectedFile.value)
-    if (heatmapUrl.value) URL.revokeObjectURL(heatmapUrl.value)
-    heatmapUrl.value = URL.createObjectURL(blob)
-  } catch (e) {
-    explainError.value = e instanceof Error ? e.message : t('classifier.explainFallbackError')
-  } finally {
-    isExplaining.value = false
-  }
-}
-
-// освобождаем blob-URL, чтобы не копить память при уходе со страницы
+// освобождаем blob-URL превью, чтобы не копить память при уходе со страницы
 onBeforeUnmount(() => {
   if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
-  if (heatmapUrl.value) URL.revokeObjectURL(heatmapUrl.value)
 })
 </script>
 
@@ -142,7 +91,7 @@ onBeforeUnmount(() => {
           <button
             class="flex-1 rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="isLoading"
-            @click="submit"
+            @click="predict(selectedFile!)"
           >
             <span v-if="!isLoading">{{ t('classifier.analyze') }}</span>
             <span v-else class="inline-flex items-center gap-2">
@@ -161,8 +110,11 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
-        <p v-if="error" class="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400">
-          {{ error }}
+        <p
+          v-if="selectError || predictError"
+          class="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400"
+        >
+          {{ selectError || predictError }}
         </p>
       </div>
 
@@ -185,7 +137,7 @@ onBeforeUnmount(() => {
             v-if="!heatmapUrl"
             class="flex w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:border-brand-600 dark:hover:text-brand-400"
             :disabled="isExplaining"
-            @click="showHeatmap"
+            @click="explain(selectedFile!)"
           >
             <FireIcon v-if="!isExplaining" class="h-4 w-4" />
             {{ isExplaining ? t('classifier.gradcamBuilding') : t('classifier.gradcamButton') }}
@@ -216,11 +168,7 @@ onBeforeUnmount(() => {
           v-for="item in history"
           :key="item.timestamp"
           class="flex w-28 shrink-0 flex-col items-center gap-2 rounded-2xl border p-3 text-center"
-          :class="
-            item.isRecognized
-              ? 'border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900'
-              : 'border-amber-200 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/30'
-          "
+          :class="recognitionCardClass(item.isRecognized)"
         >
           <div class="relative">
             <img :src="item.thumbnail" alt="" class="h-16 w-16 rounded-xl object-cover" />
@@ -230,7 +178,7 @@ onBeforeUnmount(() => {
             />
           </div>
           <p class="w-full truncate text-xs font-medium text-stone-700 dark:text-stone-300">
-            {{ pickByLocale(item.classRu, item.classEn, item.classKk, locale) }}
+            {{ pickByLocale({ ru: item.classRu, en: item.classEn, kk: item.classKk }, locale) }}
           </p>
           <p class="text-xs text-stone-400 dark:text-stone-500">{{ Math.round(item.confidence * 100) }}%</p>
         </div>

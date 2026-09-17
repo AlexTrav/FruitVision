@@ -7,9 +7,9 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from app.classes_i18n import CLASS_NAME_KK, CLASS_NAME_RU
-from app.gradcam import _make_heatmap
-from app.inference import get_classifier
 from app.main import app
+from app.ml.gradcam import _make_heatmap
+from app.ml.inference import get_classifier
 
 # папка с курируемыми тестовыми фото на уровне корня проекта (создана отдельно от юнит-тестов)
 DATA_TEST_DIR = Path(__file__).resolve().parents[2] / "data_test"
