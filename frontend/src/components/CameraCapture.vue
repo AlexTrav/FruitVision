@@ -54,8 +54,8 @@ onBeforeUnmount(stopCamera)
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-4 rounded-3xl border border-stone-200 bg-white p-5">
-    <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
+  <div class="flex flex-col items-center gap-4 rounded-3xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900">
+    <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
 
     <video
       v-show="!error"
@@ -76,7 +76,7 @@ onBeforeUnmount(stopCamera)
         Снять
       </button>
       <button
-        class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400"
+        class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400 dark:border-stone-700 dark:text-stone-300 dark:hover:border-stone-600"
         @click="emit('close')"
       >
         Отмена

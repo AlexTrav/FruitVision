@@ -31,8 +31,8 @@ function openPicker() {
     class="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed p-10 text-center transition-colors"
     :class="
       isDragging
-        ? 'border-brand-500 bg-brand-50'
-        : 'border-stone-300 bg-white hover:border-brand-400 hover:bg-brand-50/40'
+        ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30'
+        : 'border-stone-300 bg-white hover:border-brand-400 hover:bg-brand-50/40 dark:border-stone-700 dark:bg-stone-900 dark:hover:border-brand-600 dark:hover:bg-brand-900/20'
     "
     role="button"
     tabindex="0"
@@ -42,9 +42,9 @@ function openPicker() {
     @dragleave.prevent="isDragging = false"
     @drop.prevent="onDrop"
   >
-    <CameraIcon class="h-10 w-10 text-stone-400" />
-    <p class="text-base font-medium text-stone-700">Перетащи фото сюда или нажми, чтобы выбрать</p>
-    <p class="text-sm text-stone-400">JPG, PNG или WebP – до 8 МБ</p>
+    <CameraIcon class="h-10 w-10 text-stone-400 dark:text-stone-500" />
+    <p class="text-base font-medium text-stone-700 dark:text-stone-200">Перетащи фото сюда или нажми, чтобы выбрать</p>
+    <p class="text-sm text-stone-400 dark:text-stone-500">JPG, PNG или WebP – до 8 МБ</p>
     <input ref="inputRef" type="file" accept="image/*" class="hidden" @change="onChange" />
   </div>
 </template>

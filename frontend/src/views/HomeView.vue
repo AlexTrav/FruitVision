@@ -33,28 +33,28 @@ const steps = [
     <section class="relative overflow-hidden">
       <!-- декоративные анимированные пятна фона -->
       <div
-        class="animate-blob absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand-200/60 blur-3xl"
+        class="animate-blob absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand-200/60 blur-3xl dark:bg-brand-900/30"
         aria-hidden="true"
       />
       <div
-        class="animate-blob-delayed absolute -right-16 top-10 h-80 w-80 rounded-full bg-accent-200/60 blur-3xl"
+        class="animate-blob-delayed absolute -right-16 top-10 h-80 w-80 rounded-full bg-accent-200/60 blur-3xl dark:bg-accent-900/30"
         aria-hidden="true"
       />
 
       <div class="relative mx-auto max-w-6xl px-5 pb-20 pt-16 text-center sm:pt-24">
         <span
-          class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700"
+          class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 dark:border-brand-800 dark:bg-brand-900/40 dark:text-brand-300"
         >
           <AcademicCapIcon class="h-4 w-4" />
           Рубежное задание · Computer Vision
         </span>
 
-        <h1 class="mt-6 text-4xl font-bold tracking-tight text-stone-900 sm:text-6xl">
+        <h1 class="mt-6 text-4xl font-bold tracking-tight text-stone-900 sm:text-6xl dark:text-stone-50">
           Узнай фрукт или овощ<br class="hidden sm:block" />
           по одной фотографии
         </h1>
 
-        <p class="mx-auto mt-5 max-w-xl text-lg text-stone-500">
+        <p class="mx-auto mt-5 max-w-xl text-lg text-stone-500 dark:text-stone-400">
           Загрузи изображение – свёрточная нейросеть определит один из 36 видов фруктов и овощей
           и покажет, насколько она уверена в ответе.
         </p>
@@ -68,7 +68,7 @@ const steps = [
           </RouterLink>
           <RouterLink
             to="/about"
-            class="w-full rounded-full border border-stone-300 bg-white px-7 py-3 text-base font-semibold text-stone-700 transition-colors hover:border-brand-300 hover:text-brand-700 sm:w-auto"
+            class="w-full rounded-full border border-stone-300 bg-white px-7 py-3 text-base font-semibold text-stone-700 transition-colors hover:border-brand-300 hover:text-brand-700 sm:w-auto dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-brand-700 dark:hover:text-brand-400"
           >
             Как это устроено
           </RouterLink>
@@ -77,11 +77,13 @@ const steps = [
     </section>
 
     <!-- блок статистики проекта -->
-    <section class="border-y border-stone-200 bg-white">
-      <div class="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-stone-200 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <section class="border-y border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900">
+      <div
+        class="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-stone-200 sm:grid-cols-3 sm:divide-x sm:divide-y-0 dark:divide-stone-800"
+      >
         <div v-for="stat in stats" :key="stat.label" class="px-6 py-8 text-center" v-reveal>
-          <div class="text-3xl font-bold text-brand-700">{{ stat.value }}</div>
-          <div class="mt-1 text-sm text-stone-500">{{ stat.label }}</div>
+          <div class="text-3xl font-bold text-brand-700 dark:text-brand-400">{{ stat.value }}</div>
+          <div class="mt-1 text-sm text-stone-500 dark:text-stone-400">{{ stat.label }}</div>
         </div>
       </div>
     </section>
@@ -89,8 +91,8 @@ const steps = [
     <!-- блок "как это работает" -->
     <section class="mx-auto max-w-6xl px-5 py-20">
       <div class="mx-auto max-w-2xl text-center" v-reveal>
-        <h2 class="text-3xl font-bold text-stone-900">Как это работает</h2>
-        <p class="mt-3 text-stone-500">Три простых шага от фотографии до ответа модели.</p>
+        <h2 class="text-3xl font-bold text-stone-900 dark:text-stone-50">Как это работает</h2>
+        <p class="mt-3 text-stone-500 dark:text-stone-400">Три простых шага от фотографии до ответа модели.</p>
       </div>
 
       <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -98,14 +100,16 @@ const steps = [
           v-for="(step, i) in steps"
           :key="step.title"
           v-reveal
-          class="rounded-3xl border border-stone-200 bg-white p-6 transition-shadow hover:shadow-lg"
+          class="rounded-3xl border border-stone-200 bg-white p-6 transition-shadow hover:shadow-lg dark:border-stone-800 dark:bg-stone-900"
           :style="{ transitionDelay: `${i * 80}ms` }"
         >
-          <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          <div
+            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-900/40 dark:text-brand-400"
+          >
             <component :is="step.icon" class="h-6 w-6" />
           </div>
-          <h3 class="mt-4 text-lg font-semibold text-stone-900">{{ step.title }}</h3>
-          <p class="mt-2 text-sm leading-relaxed text-stone-500">{{ step.text }}</p>
+          <h3 class="mt-4 text-lg font-semibold text-stone-900 dark:text-stone-50">{{ step.title }}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-stone-500 dark:text-stone-400">{{ step.text }}</p>
         </div>
       </div>
     </section>

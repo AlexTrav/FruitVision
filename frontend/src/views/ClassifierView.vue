@@ -105,8 +105,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="mx-auto max-w-5xl px-5 py-14">
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="text-3xl font-bold text-stone-900 sm:text-4xl">Классификатор изображений</h1>
-      <p class="mt-3 text-stone-500">
+      <h1 class="text-3xl font-bold text-stone-900 sm:text-4xl dark:text-stone-50">Классификатор изображений</h1>
+      <p class="mt-3 text-stone-500 dark:text-stone-400">
         Загрузи фото фрукта или овоща – модель определит, что на нём изображено.
       </p>
     </div>
@@ -120,13 +120,13 @@ onBeforeUnmount(() => {
         <UploadDropzone v-else-if="!previewUrl" @select="onSelect" />
 
         <!-- иначе показываем превью выбранного изображения -->
-        <div v-else class="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
+        <div v-else class="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-900">
           <img :src="previewUrl" alt="Предпросмотр загруженного изображения" class="h-72 w-full object-cover" />
         </div>
 
         <button
           v-if="!showCamera && !previewUrl"
-          class="flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700"
+          class="flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-brand-600 dark:hover:text-brand-400"
           @click="showCamera = true"
         >
           <CameraIcon class="h-4 w-4" />
@@ -149,14 +149,14 @@ onBeforeUnmount(() => {
             </span>
           </button>
           <button
-            class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400"
+            class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400 dark:border-stone-700 dark:text-stone-300 dark:hover:border-stone-600"
             @click="reset"
           >
             Сбросить
           </button>
         </div>
 
-        <p v-if="error" class="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">
+        <p v-if="error" class="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400">
           {{ error }}
         </p>
       </div>
@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
           <ResultCard v-if="result" :result="result" />
           <div
             v-else
-            class="flex h-56 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed border-stone-300 p-6 text-center text-stone-400"
+            class="flex h-56 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed border-stone-300 p-6 text-center text-stone-400 dark:border-stone-700 dark:text-stone-500"
           >
             <MagnifyingGlassIcon class="h-8 w-8" />
             <p class="text-sm">Здесь появится результат после загрузки фото</p>
@@ -175,10 +175,10 @@ onBeforeUnmount(() => {
         </Transition>
 
         <!-- Grad-CAM: на что "смотрела" модель, принимая решение -->
-        <div v-if="result" class="rounded-3xl border border-stone-200 bg-white p-5">
+        <div v-if="result" class="rounded-3xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900">
           <button
             v-if="!heatmapUrl"
-            class="flex w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            class="flex w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:border-brand-600 dark:hover:text-brand-400"
             :disabled="isExplaining"
             @click="showHeatmap"
           >
@@ -187,13 +187,13 @@ onBeforeUnmount(() => {
           </button>
 
           <div v-else>
-            <p class="mb-3 text-sm font-medium text-stone-500">
+            <p class="mb-3 text-sm font-medium text-stone-500 dark:text-stone-400">
               Тепловая карта Grad-CAM – красным выделены области, повлиявшие на решение модели
             </p>
             <img :src="heatmapUrl" alt="Grad-CAM тепловая карта" class="w-full rounded-2xl" />
           </div>
 
-          <p v-if="explainError" class="mt-3 text-sm text-red-600">{{ explainError }}</p>
+          <p v-if="explainError" class="mt-3 text-sm text-red-600 dark:text-red-400">{{ explainError }}</p>
         </div>
       </div>
     </div>
@@ -201,25 +201,31 @@ onBeforeUnmount(() => {
     <!-- история последних предсказаний, хранится локально в браузере -->
     <div v-if="history.length" class="mt-14">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-stone-900">История предсказаний</h2>
-        <button class="text-sm text-stone-400 hover:text-stone-600" @click="clearHistory">Очистить</button>
+        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-50">История предсказаний</h2>
+        <button class="text-sm text-stone-400 hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300" @click="clearHistory">
+          Очистить
+        </button>
       </div>
       <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
         <div
           v-for="item in history"
           :key="item.timestamp"
           class="flex w-28 shrink-0 flex-col items-center gap-2 rounded-2xl border p-3 text-center"
-          :class="item.isRecognized ? 'border-stone-200 bg-white' : 'border-amber-200 bg-amber-50'"
+          :class="
+            item.isRecognized
+              ? 'border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900'
+              : 'border-amber-200 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/30'
+          "
         >
           <div class="relative">
             <img :src="item.thumbnail" alt="" class="h-16 w-16 rounded-xl object-cover" />
             <ExclamationTriangleIcon
               v-if="!item.isRecognized"
-              class="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-amber-100 p-0.5 text-amber-600"
+              class="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-amber-100 p-0.5 text-amber-600 dark:bg-amber-900 dark:text-amber-300"
             />
           </div>
-          <p class="w-full truncate text-xs font-medium text-stone-700">{{ item.classRu }}</p>
-          <p class="text-xs text-stone-400">{{ Math.round(item.confidence * 100) }}%</p>
+          <p class="w-full truncate text-xs font-medium text-stone-700 dark:text-stone-300">{{ item.classRu }}</p>
+          <p class="text-xs text-stone-400 dark:text-stone-500">{{ Math.round(item.confidence * 100) }}%</p>
         </div>
       </div>
     </div>
