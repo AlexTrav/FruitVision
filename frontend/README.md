@@ -39,6 +39,12 @@ make docker-run     # поднять контейнер на http://localhost:80
 
 Для запуска вместе с бэкендом используйте `docker compose` из корня проекта (см. корневой README.md).
 
+## Деплой на GitHub Pages
+
+`.github/workflows/deploy-pages.yml` собирает сайт с `--base=/<repo-name>/` и адресом бэкенда
+на Render (задан прямо в workflow), затем публикует на GitHub Pages при каждом push в `main`,
+затрагивающем `frontend/`. Живой адрес и детали – в корневом README.md.
+
 ## Стек
 
 - Vue 3 (Composition API, `<script setup>`)

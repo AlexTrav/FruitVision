@@ -1,12 +1,15 @@
 # FruitVision
 
 [![CI](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Рубежное задание по курсу «Искусственный интеллект и машинное обучение»:
 система распознавания изображений (Computer Vision) – классификация фруктов и овощей
 по фотографии. Полный пайплайн: обучение CNN → REST API → веб-интерфейс.
 
 Автор: **Алексей Нерезов**.
+
+**Живой деплой:** сайт – https://alextrav.github.io/-FruitVision/, API – https://fruitvision-backend.onrender.com
 
 Условие задания: [ТЗ.md](ТЗ.md). Краткое описание решения: [SUMMARY.md](SUMMARY.md).
 
@@ -16,17 +19,19 @@
 - загрузка фото с диска (drag-and-drop) или прямо с камеры устройства;
 - Grad-CAM – тепловая карта, показывающая, на какую область фото "смотрела" модель;
 - локальная история последних предсказаний (хранится в браузере);
-- страница "О проекте" с метриками, пайплайном обучения и стеком технологий.
+- страница "О проекте" с метриками, пайплайном обучения и стеком технологий;
+- rate limiting на тяжёлых по CPU эндпоинтах, автотесты бэкенда, CI/CD.
 
 ## Структура проекта
 
 ```
 FruitVision/
-  model/          – обучение модели (Colab-ноутбук) и её артефакты
-  backend/        – FastAPI-сервис с инференсом и Grad-CAM
-  frontend/       – Vue 3 + TypeScript + Tailwind сайт
-  .github/workflows/ci.yml – CI: тесты бэкенда + сборка фронтенда
-  docker-compose.yml, Makefile – запуск всего стека одной командой
+  model/                     – обучение модели (Colab-ноутбук) и её артефакты
+  backend/                   – FastAPI-сервис с инференсом, Grad-CAM и rate limiting
+  frontend/                  – Vue 3 + TypeScript + Tailwind сайт
+  data_test/                 – тестовые фото для ручной проверки классификатора
+  .github/workflows/         – CI (тесты + сборка) и деплой фронтенда на GitHub Pages
+  docker-compose.yml, Makefile, Dockerfile – запуск всего стека одной командой
 ```
 
 Подробности по каждой части – в README внутри соответствующей папки:
@@ -77,6 +82,10 @@ Dockerfile в корне репозитория).
 ## Стек
 
 - **Модель:** TensorFlow/Keras, MobileNetV2 (transfer learning + fine-tuning), обучение в Google Colab.
-- **Бэкенд:** Python, FastAPI, TensorFlow (инференс + Grad-CAM), pytest.
+- **Бэкенд:** Python, FastAPI, TensorFlow (инференс + Grad-CAM), slowapi (rate limiting), pytest.
 - **Фронтенд:** Vue 3, TypeScript, Tailwind CSS, Vite.
-- **Инфраструктура:** Docker, docker-compose, Makefile, GitHub Actions (CI).
+- **Инфраструктура:** Docker, docker-compose, Makefile, GitHub Actions (CI/CD).
+
+## Лицензия
+
+[MIT](LICENSE) – используй, форкай, изучай свободно.

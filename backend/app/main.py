@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile
@@ -12,6 +13,9 @@ from .gradcam import generate_gradcam_png
 from .inference import InvalidImageError, get_classifier
 from .rate_limit import limiter
 from .schemas import ClassInfo, ModelInfo, PredictionResponse
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logger = logging.getLogger("fruitvision")
 
 
 # прогреваем модель один раз при старте приложения, а не на первый запрос пользователя
@@ -35,13 +39,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ограничиваем частоту запросов per-IP — защита тяжёлых по CPU эндпоинтов от злоупотребления
+# ограничиваем частоту запросов per-IP – защита тяжёлых по CPU эндпоинтов от злоупотребления
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    logger.warning("rate limit exceeded: %s %s", request.url.path, exc.detail)
     return JSONResponse(status_code=429, content={"detail": "Слишком много запросов, попробуй чуть позже"})
 
 
@@ -88,11 +93,12 @@ async def predict(request: Request, file: UploadFile = File(...)) -> PredictionR
     except InvalidImageError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
+    logger.info("predict: %s (%.1f%%)", predicted.class_en, predicted.confidence * 100)
     return PredictionResponse(predicted=predicted, top3=top3)
 
 
 # Grad-CAM: показывает PNG с тепловой картой той области фото, на которую "смотрела" модель
-# лимит строже, чем у predict — здесь ещё считаются градиенты, эндпоинт заметно тяжелее по CPU
+# лимит строже, чем у predict – здесь ещё считаются градиенты, эндпоинт заметно тяжелее по CPU
 @app.post("/api/explain")
 @limiter.limit("10/minute")
 async def explain(request: Request, file: UploadFile = File(...)) -> Response:
@@ -104,4 +110,5 @@ async def explain(request: Request, file: UploadFile = File(...)) -> Response:
     except InvalidImageError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
+    logger.info("explain: gradcam generated (%d bytes)", len(png_bytes))
     return Response(content=png_bytes, media_type="image/png")

@@ -19,8 +19,8 @@ FastAPI-сервис, который загружает обученную Keras
 ## Rate limiting
 
 `/api/predict` и `/api/explain` ограничены per-IP (`slowapi`, in-memory, см. `app/rate_limit.py`):
-20 и 10 запросов в минуту соответственно (`/api/explain` дороже по CPU — считает градиенты).
-При превышении — `429` с `{"detail": "..."}`. IP берётся из `X-Forwarded-For` (мы за прокси
+20 и 10 запросов в минуту соответственно (`/api/explain` дороже по CPU – считает градиенты).
+При превышении – `429` с `{"detail": "..."}`. IP берётся из `X-Forwarded-For` (мы за прокси
 Render/Cloudflare в проде), с фолбэком на прямой адрес клиента.
 
 ## Запуск локально (без Docker)
@@ -39,9 +39,19 @@ make run       # запускает uvicorn с автоперезагрузко�
 make test
 ```
 
-Тесты (`tests/test_api.py`) поднимают приложение через `TestClient` и проверяют
-все эндпоинты, включая обработку невалидного изображения и корректность Grad-CAM PNG.
+16 тестов в `tests/test_api.py` (через `TestClient`): все эндпоинты на успешном пути,
+невалидные/пустые/слишком большие файлы, неразрешённые HTTP-методы, корректность
+Grad-CAM PNG, согласованность топ-класса между `/predict` и `/explain`, целостность
+словаря RU-переводов классов (`test_all_classes_have_ru_translation` – упадёт, если
+в модель добавили класс, но забыли перевод), и срабатывание rate limit (`429`).
 Прогоняются автоматически в CI (`.github/workflows/ci.yml`) на каждый push и pull request.
+
+## Логи
+
+Стандартные логи Python (`logging`, вывод в stdout – попадает в логи Render/Docker):
+каждое предсказание (`predict: class (confidence%)`), каждое построение Grad-CAM
+и каждое срабатывание rate limit. Полноценный структурированный логинг/APM не
+подключался – избыточно для масштаба проекта.
 
 ## Запуск в Docker
 
@@ -57,13 +67,13 @@ make docker-run     # контейнер на http://localhost:8000
 ```
 backend/
   app/
-    main.py         – FastAPI-приложение и эндпоинты
-    inference.py     – загрузка модели и инференс
-    gradcam.py         – Grad-CAM: тепловая карта значимых областей изображения
-    rate_limit.py        – per-IP rate limiting (slowapi)
-    schemas.py        – Pydantic-схемы запросов/ответов
-    classes_ru.py      – перевод названий классов на русский
-    config.py           – пути и константы (учитывает MODEL_DIR)
+    main.py        – FastAPI-приложение и эндпоинты
+    inference.py   – загрузка модели и инференс
+    gradcam.py     – Grad-CAM: тепловая карта значимых областей изображения
+    rate_limit.py  – per-IP rate limiting (slowapi)
+    schemas.py     – Pydantic-схемы запросов/ответов
+    classes_ru.py  – перевод названий классов на русский
+    config.py      – пути и константы (учитывает MODEL_DIR)
   tests/
-    test_api.py           – автотесты эндпоинтов
+    test_api.py    – автотесты эндпоинтов
 ```
