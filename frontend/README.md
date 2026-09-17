@@ -62,3 +62,11 @@ make docker-run     # поднять контейнер на http://localhost:80
 - vue-router 4
 - Tailwind CSS 4 (через `@tailwindcss/vite`)
 - Vite 8
+- иконки – [Heroicons](https://heroicons.com) (MIT)
+
+## Сторонние ассеты
+
+Логотип и favicon – иконка авокадо "Avocado / Flat" из
+[Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji) (MIT License,
+Copyright (c) Microsoft Corporation), встроена как inline SVG в
+`src/components/icons/LogoMark.vue` и `public/favicon.svg`.
