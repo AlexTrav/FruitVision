@@ -41,7 +41,7 @@ jobs:
           VITE_API_BASE_URL: https://fruitvision-backend.onrender.com
         run: npx vite build --base=/${{ github.event.repository.name }}/
 
-      # GitHub Pages не умеет в server-side rewrite для SPA — отдаём index.html и на 404
+      # GitHub Pages не умеет в server-side rewrite для SPA – отдаём index.html и на 404
       - name: SPA fallback for client-side routing
         run: cp frontend/dist/index.html frontend/dist/404.html
 

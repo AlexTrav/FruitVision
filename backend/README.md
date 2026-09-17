@@ -16,6 +16,13 @@ FastAPI-сервис, который загружает обученную Keras
 Модель и файлы `class_names.json` / `model_info.json` берутся из `../model/artifacts`
 (путь можно переопределить переменной окружения `MODEL_DIR` – используется в Docker).
 
+## Rate limiting
+
+`/api/predict` и `/api/explain` ограничены per-IP (`slowapi`, in-memory, см. `app/rate_limit.py`):
+20 и 10 запросов в минуту соответственно (`/api/explain` дороже по CPU — считает градиенты).
+При превышении — `429` с `{"detail": "..."}`. IP берётся из `X-Forwarded-For` (мы за прокси
+Render/Cloudflare в проде), с фолбэком на прямой адрес клиента.
+
 ## Запуск локально (без Docker)
 
 ```bash
@@ -53,6 +60,7 @@ backend/
     main.py         – FastAPI-приложение и эндпоинты
     inference.py     – загрузка модели и инференс
     gradcam.py         – Grad-CAM: тепловая карта значимых областей изображения
+    rate_limit.py        – per-IP rate limiting (slowapi)
     schemas.py        – Pydantic-схемы запросов/ответов
     classes_ru.py      – перевод названий классов на русский
     config.py           – пути и константы (учитывает MODEL_DIR)

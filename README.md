@@ -62,15 +62,15 @@ cd frontend && make install && make dev    # http://localhost:5173
 
 ## Продакшн (живой деплой, бесплатно)
 
-- **Сайт:** https://alextrav.github.io/-FruitVision/ — GitHub Pages, деплоится автоматически
+- **Сайт:** https://alextrav.github.io/-FruitVision/ – GitHub Pages, деплоится автоматически
   (`.github/workflows/deploy-pages.yml`) при каждом push в `main`, затрагивающем `frontend/`.
-- **API:** https://fruitvision-backend.onrender.com — Render.com, free-тариф (Docker,
+- **API:** https://fruitvision-backend.onrender.com – Render.com, free-тариф (Docker,
   сборка из корневого `Dockerfile`). Автодеплоится при push в `main` (Render сам следит за веткой).
-  Из-за free-тарифа сервис засыпает после ~15 минут простоя — первый запрос после паузы может
+  Из-за free-тарифа сервис засыпает после ~15 минут простоя – первый запрос после паузы может
   идти 30–60 секунд.
 
 Примечание: изначально планировался Hugging Face Spaces, но там Docker/Gradio Spaces с недавних
-пор требуют платный PRO-план — бесплатны только Static Spaces (без бэкенда). Поэтому бэкенд
+пор требуют платный PRO-план – бесплатны только Static Spaces (без бэкенда). Поэтому бэкенд
 уехал на Render, а корневой `Dockerfile` пригодился и для него (Render тоже по умолчанию ищет
 Dockerfile в корне репозитория).
 

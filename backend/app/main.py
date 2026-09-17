@@ -1,12 +1,16 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, Response, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from starlette.responses import JSONResponse
 
 from .classes_ru import CLASS_NAME_RU
 from .config import MAX_UPLOAD_SIZE_BYTES
 from .gradcam import generate_gradcam_png
 from .inference import InvalidImageError, get_classifier
+from .rate_limit import limiter
 from .schemas import ClassInfo, ModelInfo, PredictionResponse
 
 
@@ -30,6 +34,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ограничиваем частоту запросов per-IP — защита тяжёлых по CPU эндпоинтов от злоупотребления
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    return JSONResponse(status_code=429, content={"detail": "Слишком много запросов, попробуй чуть позже"})
 
 
 # используется докер-контейнером и мониторингом для проверки, что сервис жив
@@ -65,7 +78,8 @@ async def _read_validated_image(file: UploadFile) -> bytes:
 
 # основной эндпоинт: принимает изображение и возвращает предсказанный класс
 @app.post("/api/predict", response_model=PredictionResponse)
-async def predict(file: UploadFile = File(...)) -> PredictionResponse:
+@limiter.limit("20/minute")
+async def predict(request: Request, file: UploadFile = File(...)) -> PredictionResponse:
     content = await _read_validated_image(file)
 
     classifier = get_classifier()
@@ -78,8 +92,10 @@ async def predict(file: UploadFile = File(...)) -> PredictionResponse:
 
 
 # Grad-CAM: показывает PNG с тепловой картой той области фото, на которую "смотрела" модель
+# лимит строже, чем у predict — здесь ещё считаются градиенты, эндпоинт заметно тяжелее по CPU
 @app.post("/api/explain")
-async def explain(file: UploadFile = File(...)) -> Response:
+@limiter.limit("10/minute")
+async def explain(request: Request, file: UploadFile = File(...)) -> Response:
     content = await _read_validated_image(file)
 
     classifier = get_classifier()

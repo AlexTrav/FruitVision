@@ -4,3 +4,4 @@ python-multipart==0.0.32
 tensorflow==2.18.0
 pillow
 numpy
+slowapi==0.1.10

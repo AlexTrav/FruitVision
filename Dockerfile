@@ -1,4 +1,4 @@
-# Dockerfile для Hugging Face Spaces (SDK: Docker) — HF ожидает Dockerfile в корне репозитория.
+# Dockerfile для Hugging Face Spaces (SDK: Docker) – HF ожидает Dockerfile в корне репозитория.
 # Идентичен backend/Dockerfile, только контекст сборки уже и так корень репо (см. .github metadata в README.md).
 FROM python:3.11-slim
 

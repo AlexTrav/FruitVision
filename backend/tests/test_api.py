@@ -94,3 +94,18 @@ def test_explain_corrupted_image_returns_400(client: TestClient):
         files={"file": ("fake.jpg", b"this is not an image", "image/jpeg")},
     )
     assert resp.status_code == 400
+
+
+# rate limit считает запросы независимо от того, что внутри — невалидный файл быстро даёт 400,
+# но всё равно расходует лимит; после превышения "20/minute" сервис должен ответить 429.
+# Тесты идут последними в файле: предыдущие тесты уже частично израсходовали лимит того же клиента.
+def test_predict_rate_limit_returns_429(client: TestClient):
+    files = {"file": ("x.txt", b"data", "text/plain")}
+    statuses = [client.post("/api/predict", files=files).status_code for _ in range(25)]
+    assert 429 in statuses
+
+
+def test_explain_rate_limit_returns_429(client: TestClient):
+    files = {"file": ("x.txt", b"data", "text/plain")}
+    statuses = [client.post("/api/explain", files=files).status_code for _ in range(15)]
+    assert 429 in statuses

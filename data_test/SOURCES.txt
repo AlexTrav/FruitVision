@@ -10,7 +10,7 @@
   pineapple.png   – https://commons.wikimedia.org/wiki/File:കൈതച്ചക്ക.jpg
 
 Овощи:
-  carrot.png      – https://i.pinimg.com/originals/82/dd/f1/82ddf1a737aeaceff67e7cb3a41205e8.jpg (заменено вручную — исходный вариант с Wikimedia модель путала с редисом)
+  carrot.png      – https://i.pinimg.com/originals/82/dd/f1/82ddf1a737aeaceff67e7cb3a41205e8.jpg (заменено вручную – исходный вариант с Wikimedia модель путала с редисом)
   tomato.png      – https://commons.wikimedia.org/wiki/File:Tomato_je.jpg
   potato.png      – https://commons.wikimedia.org/wiki/File:Patates.jpg
   cucumber.png    – https://commons.wikimedia.org/wiki/File:ARS_cucumber.jpg
