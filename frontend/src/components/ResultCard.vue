@@ -10,7 +10,22 @@ function pct(value: number): string {
 </script>
 
 <template>
-  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
+  <div
+    class="rounded-3xl border p-6 shadow-sm sm:p-8"
+    :class="result.is_recognized ? 'border-stone-200 bg-white' : 'border-amber-200 bg-amber-50'"
+  >
+    <!-- уверенность ниже порога – скорее всего, это вообще не фрукт и не овощ из наших 36 классов -->
+    <div
+      v-if="!result.is_recognized"
+      class="mb-5 flex items-start gap-3 rounded-2xl bg-amber-100 px-4 py-3 text-sm text-amber-800"
+    >
+      <span class="text-lg leading-none">⚠️</span>
+      <p>
+        Модель не уверена, что на фото один из 36 известных ей фруктов или овощей. Ниже показан
+        самый близкий вариант, но доверять ему не стоит.
+      </p>
+    </div>
+
     <p class="text-sm font-medium text-stone-400">Это похоже на</p>
     <h3 class="mt-1 text-3xl font-semibold text-stone-900">{{ result.predicted.class_ru }}</h3>
     <p class="text-sm text-stone-400">{{ result.predicted.class_en }}</p>

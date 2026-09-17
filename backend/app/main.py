@@ -8,7 +8,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from starlette.responses import JSONResponse
 
 from .classes_ru import CLASS_NAME_RU
-from .config import MAX_UPLOAD_SIZE_BYTES
+from .config import MAX_UPLOAD_SIZE_BYTES, UNKNOWN_CONFIDENCE_THRESHOLD
 from .gradcam import generate_gradcam_png
 from .inference import InvalidImageError, get_classifier
 from .rate_limit import limiter
@@ -93,8 +93,16 @@ async def predict(request: Request, file: UploadFile = File(...)) -> PredictionR
     except InvalidImageError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    logger.info("predict: %s (%.1f%%)", predicted.class_en, predicted.confidence * 100)
-    return PredictionResponse(predicted=predicted, top3=top3)
+    is_recognized = predicted.confidence >= UNKNOWN_CONFIDENCE_THRESHOLD
+    if is_recognized:
+        logger.info("predict: %s (%.1f%%)", predicted.class_en, predicted.confidence * 100)
+    else:
+        logger.info(
+            "predict: low confidence, likely not one of the 36 classes (top guess %s, %.1f%%)",
+            predicted.class_en,
+            predicted.confidence * 100,
+        )
+    return PredictionResponse(predicted=predicted, top3=top3, is_recognized=is_recognized)
 
 
 # Grad-CAM: показывает PNG с тепловой картой той области фото, на которую "смотрела" модель

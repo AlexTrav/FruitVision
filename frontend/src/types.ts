@@ -15,6 +15,7 @@ export interface ClassPrediction {
 export interface PredictionResponse {
   predicted: ClassPrediction
   top3: ClassPrediction[]
+  is_recognized: boolean // false – уверенность ниже порога, скорее всего это не один из 36 классов
 }
 
 // метаданные модели для страницы "О проекте"

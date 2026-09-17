@@ -1,4 +1,5 @@
 from io import BytesIO
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -9,6 +10,9 @@ from app.classes_ru import CLASS_NAME_RU
 from app.gradcam import _make_heatmap
 from app.inference import get_classifier
 from app.main import app
+
+# папка с курируемыми тестовыми фото на уровне корня проекта (создана отдельно от юнит-тестов)
+DATA_TEST_DIR = Path(__file__).resolve().parents[2] / "data_test"
 
 
 # TestClient как контекстный менеджер запускает lifespan – модель грузится один раз на весь модуль
@@ -56,6 +60,31 @@ def test_predict_valid_image(client: TestClient):
     data = resp.json()
     assert 0.0 <= data["predicted"]["confidence"] <= 1.0
     assert len(data["top3"]) == 3
+    assert isinstance(data["is_recognized"], bool)
+
+
+# реальное куратированное фото яблока должно уверенно распознаваться как один из 36 классов
+def test_predict_recognized_real_photo(client: TestClient):
+    with open(DATA_TEST_DIR / "apple.png", "rb") as f:
+        resp = client.post("/api/predict", files={"file": ("apple.png", f, "image/png")})
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["predicted"]["class_en"] == "apple"
+    assert data["is_recognized"] is True
+
+
+# случайный шум не похож ни на один из 36 классов – ответ должен явно пометить это через is_recognized
+def test_predict_unrecognized_image_flagged(client: TestClient):
+    rng = np.random.default_rng(42)
+    noise = (rng.random((300, 300, 3)) * 255).astype(np.uint8)
+    buffer = BytesIO()
+    Image.fromarray(noise, mode="RGB").save(buffer, format="PNG")
+    buffer.seek(0)
+
+    resp = client.post("/api/predict", files={"file": ("noise.png", buffer, "image/png")})
+    assert resp.status_code == 200
+    assert resp.json()["is_recognized"] is False
 
 
 # файл с правильным content-type, но битым содержимым – ожидаем 400, а не 500

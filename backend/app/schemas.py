@@ -18,6 +18,7 @@ class ClassPrediction(BaseModel):
 class PredictionResponse(BaseModel):
     predicted: ClassPrediction
     top3: list[ClassPrediction]
+    is_recognized: bool  # False – уверенность ниже порога, скорее всего это не один из 36 классов
 
 
 # метаданные модели для страницы "О проекте" на фронтенде

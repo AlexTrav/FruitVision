@@ -67,6 +67,7 @@ async function submit() {
       classRu: result.value.predicted.class_ru,
       classEn: result.value.predicted.class_en,
       confidence: result.value.predicted.confidence,
+      isRecognized: result.value.is_recognized,
       timestamp: Date.now(),
     })
   } catch (e) {
@@ -204,10 +205,13 @@ onBeforeUnmount(() => {
         <div
           v-for="item in history"
           :key="item.timestamp"
-          class="flex w-28 shrink-0 flex-col items-center gap-2 rounded-2xl border border-stone-200 bg-white p-3 text-center"
+          class="flex w-28 shrink-0 flex-col items-center gap-2 rounded-2xl border p-3 text-center"
+          :class="item.isRecognized ? 'border-stone-200 bg-white' : 'border-amber-200 bg-amber-50'"
         >
           <img :src="item.thumbnail" alt="" class="h-16 w-16 rounded-xl object-cover" />
-          <p class="w-full truncate text-xs font-medium text-stone-700">{{ item.classRu }}</p>
+          <p class="w-full truncate text-xs font-medium text-stone-700">
+            <span v-if="!item.isRecognized">⚠️ </span>{{ item.classRu }}
+          </p>
           <p class="text-xs text-stone-400">{{ Math.round(item.confidence * 100) }}%</p>
         </div>
       </div>

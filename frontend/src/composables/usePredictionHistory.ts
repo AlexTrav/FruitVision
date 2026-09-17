@@ -5,6 +5,7 @@ export interface HistoryItem {
   classRu: string
   classEn: string
   confidence: number
+  isRecognized: boolean
   timestamp: number
 }
 
