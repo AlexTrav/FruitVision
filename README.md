@@ -1,15 +1,3 @@
----
-title: FruitVision
-emoji: 🥑
-colorFrom: green
-colorTo: orange
-sdk: docker
-app_port: 8000
-pinned: false
----
-
-<!-- Блок выше – метаданные для Hugging Face Spaces (этот же репозиторий пушится и туда как бэкенд). -->
-
 # FruitVision
 
 [![CI](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexTrav/-FruitVision/actions/workflows/ci.yml)
@@ -72,21 +60,19 @@ cd frontend && make install && make dev    # http://localhost:5173
 
 Подробнее – в README каждой папки.
 
-## Продакшн-деплой (бесплатно)
+## Продакшн (живой деплой, бесплатно)
 
-- **Фронтенд → GitHub Pages.** Деплоится автоматически (`.github/workflows/deploy-pages.yml`)
-  при каждом push в `main`. Разово нужно включить в репозитории: Settings → Pages → Source →
-  **GitHub Actions**. Адрес: `https://alextrav.github.io/-FruitVision/`.
-- **Бэкенд → Hugging Face Spaces** (SDK: Docker, бесплатный CPU-тариф). Метаданные для Space уже
-  лежат в этом README (YAML-блок в самом верху) и в корневом `Dockerfile`. Шаги:
-  1. Создать Space на huggingface.co (SDK: Docker).
-  2. `git remote add hf https://huggingface.co/spaces/<user>/<space>`
-  3. `git push hf main`
-  4. Скопировать публичный URL Space'а и указать его в переменной репозитория GitHub
-     `Settings → Secrets and variables → Actions → Variables → API_BASE_URL` — после следующего
-     деплоя фронтенд начнёт стучаться именно туда.
-  5. Добавить URL фронтенда (GitHub Pages) в `allow_origins` в `backend/app/main.py`, если он
-     ещё не совпадает с уже прописанным `https://alextrav.github.io`.
+- **Сайт:** https://alextrav.github.io/-FruitVision/ — GitHub Pages, деплоится автоматически
+  (`.github/workflows/deploy-pages.yml`) при каждом push в `main`, затрагивающем `frontend/`.
+- **API:** https://fruitvision-backend.onrender.com — Render.com, free-тариф (Docker,
+  сборка из корневого `Dockerfile`). Автодеплоится при push в `main` (Render сам следит за веткой).
+  Из-за free-тарифа сервис засыпает после ~15 минут простоя — первый запрос после паузы может
+  идти 30–60 секунд.
+
+Примечание: изначально планировался Hugging Face Spaces, но там Docker/Gradio Spaces с недавних
+пор требуют платный PRO-план — бесплатны только Static Spaces (без бэкенда). Поэтому бэкенд
+уехал на Render, а корневой `Dockerfile` пригодился и для него (Render тоже по умолчанию ищет
+Dockerfile в корне репозитория).
 
 ## Стек
 

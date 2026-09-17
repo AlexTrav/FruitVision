@@ -34,12 +34,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      # адрес бэкенда задаётся переменной репозитория (Settings -> Secrets and variables -> Actions -> Variables),
-      # пока бэкенд не задеплоен, VITE_API_BASE_URL можно оставить пустой
+      # бэкенд задеплоен на Render: https://fruitvision-backend.onrender.com
       - name: Build (project site base path)
         working-directory: frontend
         env:
-          VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+          VITE_API_BASE_URL: https://fruitvision-backend.onrender.com
         run: npx vite build --base=/${{ github.event.repository.name }}/
 
       # GitHub Pages не умеет в server-side rewrite для SPA — отдаём index.html и на 404
