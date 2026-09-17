@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { CameraIcon } from '@heroicons/vue/24/outline'
 
+const { t } = useI18n()
 const emit = defineEmits<{ select: [file: File] }>()
 
 const isDragging = ref(false) // подсветка зоны при перетаскивании файла
@@ -43,8 +45,8 @@ function openPicker() {
     @drop.prevent="onDrop"
   >
     <CameraIcon class="h-10 w-10 text-stone-400 dark:text-stone-500" />
-    <p class="text-base font-medium text-stone-700 dark:text-stone-200">Перетащи фото сюда или нажми, чтобы выбрать</p>
-    <p class="text-sm text-stone-400 dark:text-stone-500">JPG, PNG или WebP – до 8 МБ</p>
+    <p class="text-base font-medium text-stone-700 dark:text-stone-200">{{ t('uploadDropzone.dragText') }}</p>
+    <p class="text-sm text-stone-400 dark:text-stone-500">{{ t('uploadDropzone.formatHint') }}</p>
     <input ref="inputRef" type="file" accept="image/*" class="hidden" @change="onChange" />
   </div>
 </template>

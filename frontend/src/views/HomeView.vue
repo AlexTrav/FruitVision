@@ -1,31 +1,23 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { AcademicCapIcon, CameraIcon, CheckCircleIcon, CpuChipIcon } from '@heroicons/vue/24/outline'
 
+const { t } = useI18n()
+
 // ключевые цифры проекта для блока статистики
-const stats = [
-  { value: '36', label: 'классов фруктов и овощей' },
-  { value: '92%', label: 'точность на тестовой выборке' },
-  { value: 'CNN', label: 'MobileNetV2 + transfer learning' },
-]
+const stats = computed(() => [
+  { value: '36', label: t('home.statClasses') },
+  { value: '92%', label: t('home.statAccuracy') },
+  { value: 'CNN', label: t('home.statModel') },
+])
 
 // три шага в блоке "как это работает"
-const steps = [
-  {
-    icon: CameraIcon,
-    title: 'Загрузи фото',
-    text: 'Перетащи изображение фрукта или овоща или выбери файл с устройства.',
-  },
-  {
-    icon: CpuChipIcon,
-    title: 'Модель анализирует',
-    text: 'Свёрточная нейросеть обрабатывает изображение и считает вероятность каждого из 36 классов.',
-  },
-  {
-    icon: CheckCircleIcon,
-    title: 'Получи результат',
-    text: 'Видишь предсказанный класс, уверенность модели и ближайшие альтернативы.',
-  },
-]
+const steps = computed(() => [
+  { icon: CameraIcon, title: t('home.step1Title'), text: t('home.step1Text') },
+  { icon: CpuChipIcon, title: t('home.step2Title'), text: t('home.step2Text') },
+  { icon: CheckCircleIcon, title: t('home.step3Title'), text: t('home.step3Text') },
+])
 </script>
 
 <template>
@@ -46,17 +38,16 @@ const steps = [
           class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 dark:border-brand-800 dark:bg-brand-900/40 dark:text-brand-300"
         >
           <AcademicCapIcon class="h-4 w-4" />
-          Рубежное задание · Computer Vision
+          {{ t('home.badge') }}
         </span>
 
         <h1 class="mt-6 text-4xl font-bold tracking-tight text-stone-900 sm:text-6xl dark:text-stone-50">
-          Узнай фрукт или овощ<br class="hidden sm:block" />
-          по одной фотографии
+          {{ t('home.titleLine1') }}<br class="hidden sm:block" />
+          {{ t('home.titleLine2') }}
         </h1>
 
         <p class="mx-auto mt-5 max-w-xl text-lg text-stone-500 dark:text-stone-400">
-          Загрузи изображение – свёрточная нейросеть определит один из 36 видов фруктов и овощей
-          и покажет, насколько она уверена в ответе.
+          {{ t('home.subtitle') }}
         </p>
 
         <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -64,13 +55,13 @@ const steps = [
             to="/classify"
             class="w-full rounded-full bg-brand-600 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-brand-600/20 transition-transform hover:scale-105 hover:bg-brand-700 sm:w-auto"
           >
-            Попробовать классификатор
+            {{ t('home.ctaPrimary') }}
           </RouterLink>
           <RouterLink
             to="/about"
             class="w-full rounded-full border border-stone-300 bg-white px-7 py-3 text-base font-semibold text-stone-700 transition-colors hover:border-brand-300 hover:text-brand-700 sm:w-auto dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-brand-700 dark:hover:text-brand-400"
           >
-            Как это устроено
+            {{ t('home.ctaSecondary') }}
           </RouterLink>
         </div>
       </div>
@@ -91,8 +82,8 @@ const steps = [
     <!-- блок "как это работает" -->
     <section class="mx-auto max-w-6xl px-5 py-20">
       <div class="mx-auto max-w-2xl text-center" v-reveal>
-        <h2 class="text-3xl font-bold text-stone-900 dark:text-stone-50">Как это работает</h2>
-        <p class="mt-3 text-stone-500 dark:text-stone-400">Три простых шага от фотографии до ответа модели.</p>
+        <h2 class="text-3xl font-bold text-stone-900 dark:text-stone-50">{{ t('home.howTitle') }}</h2>
+        <p class="mt-3 text-stone-500 dark:text-stone-400">{{ t('home.howSubtitle') }}</p>
       </div>
 
       <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">

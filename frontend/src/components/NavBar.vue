@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { MoonIcon, SunIcon } from '@heroicons/vue/24/outline'
 import { useTheme } from '../composables/useTheme'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 import LogoMark from './icons/LogoMark.vue'
 
+const { t } = useI18n()
 const isOpen = ref(false) // раскрыто ли мобильное меню
 const { theme, toggleTheme } = useTheme()
 
-const links = [
-  { to: '/', label: 'Главная' },
-  { to: '/classify', label: 'Классификатор' },
-  { to: '/about', label: 'О проекте' },
-]
+const links = computed(() => [
+  { to: '/', label: t('nav.home') },
+  { to: '/classify', label: t('nav.classify') },
+  { to: '/about', label: t('nav.about') },
+])
 </script>
 
 <template>
@@ -39,9 +42,11 @@ const links = [
           </li>
         </ul>
 
+        <LanguageSwitcher class="ml-1" />
+
         <button
           class="ml-1 flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition-colors hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
-          :aria-label="theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'"
+          :aria-label="theme === 'dark' ? t('nav.themeToLight') : t('nav.themeToDark')"
           @click="toggleTheme"
         >
           <SunIcon v-if="theme === 'dark'" class="h-5 w-5" />
@@ -49,11 +54,13 @@ const links = [
         </button>
       </div>
 
-      <!-- переключатель темы и кнопка-гамбургер для мобильных экранов -->
+      <!-- переключатель языка, темы и кнопка-гамбургер для мобильных экранов -->
       <div class="flex items-center gap-1 sm:hidden">
+        <LanguageSwitcher />
+
         <button
           class="flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition-colors hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
-          :aria-label="theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'"
+          :aria-label="theme === 'dark' ? t('nav.themeToLight') : t('nav.themeToDark')"
           @click="toggleTheme"
         >
           <SunIcon v-if="theme === 'dark'" class="h-5 w-5" />
@@ -62,7 +69,7 @@ const links = [
 
         <button
           class="flex h-9 w-9 items-center justify-center rounded-full text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
-          aria-label="Открыть меню"
+          :aria-label="t('nav.openMenu')"
           @click="isOpen = !isOpen"
         >
           <svg v-if="!isOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

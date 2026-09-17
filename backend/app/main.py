@@ -7,7 +7,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from starlette.responses import JSONResponse
 
-from .classes_ru import CLASS_NAME_RU
+from .classes_i18n import CLASS_NAME_KK, CLASS_NAME_RU
 from .config import MAX_UPLOAD_SIZE_BYTES, UNKNOWN_CONFIDENCE_THRESHOLD
 from .gradcam import generate_gradcam_png
 from .inference import InvalidImageError, get_classifier
@@ -60,7 +60,10 @@ def health() -> dict:
 @app.get("/api/classes", response_model=list[ClassInfo])
 def list_classes() -> list[ClassInfo]:
     classifier = get_classifier()
-    return [ClassInfo(en=name, ru=CLASS_NAME_RU.get(name, name)) for name in classifier.class_names]
+    return [
+        ClassInfo(en=name, ru=CLASS_NAME_RU.get(name, name), kk=CLASS_NAME_KK.get(name, name))
+        for name in classifier.class_names
+    ]
 
 
 # метаданные модели (архитектура, точность, размер входа)

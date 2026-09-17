@@ -1,13 +1,15 @@
-// краткая информация о классе на двух языках (ответ /api/classes)
+// краткая информация о классе на трёх языках (ответ /api/classes)
 export interface ClassInfo {
   en: string
   ru: string
+  kk: string
 }
 
 // одно предсказание модели с уверенностью от 0 до 1
 export interface ClassPrediction {
   class_en: string
   class_ru: string
+  class_kk: string
   confidence: number
 }
 

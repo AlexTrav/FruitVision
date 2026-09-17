@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from app.classes_ru import CLASS_NAME_RU
+from app.classes_i18n import CLASS_NAME_KK, CLASS_NAME_RU
 from app.gradcam import _make_heatmap
 from app.inference import get_classifier
 from app.main import app
@@ -35,7 +35,7 @@ def test_list_classes(client: TestClient):
     assert resp.status_code == 200
     data = resp.json()
     assert len(data) == 36
-    assert all("en" in item and "ru" in item for item in data)
+    assert all("en" in item and "ru" in item and "kk" in item for item in data)
 
 
 # метаданные модели совпадают с тем, что было сохранено при экспорте из Colab
@@ -161,6 +161,13 @@ def test_all_classes_have_ru_translation(client: TestClient):
     classifier = get_classifier()
     for name in classifier.class_names:
         assert name in CLASS_NAME_RU, f"нет русского перевода для класса {name!r}"
+
+
+# та же страховка для казахского перевода
+def test_all_classes_have_kk_translation(client: TestClient):
+    classifier = get_classifier()
+    for name in classifier.class_names:
+        assert name in CLASS_NAME_KK, f"нет казахского перевода для класса {name!r}"
 
 
 # Grad-CAM строит тепловую карту для того же класса, который вернул бы обычный /predict –

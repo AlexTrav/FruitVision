@@ -1,15 +1,19 @@
+import { i18n, type AppLocale } from '../i18n'
 import type { ClassInfo, ModelInfo, PredictionResponse } from '../types'
+import { translateApiError } from './translateError'
 
 // в проде пусто (запросы идут на тот же домен через nginx-прокси), в dev – адрес FastAPI
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 
-// достаёт человекочитаемое сообщение об ошибке из ответа FastAPI (поле detail)
+// достаёт человекочитаемое сообщение об ошибке из ответа FastAPI (поле detail) и переводит его
+// на текущий язык интерфейса – бэкенд сам всегда отвечает на русском
 async function handleErrors(res: Response): Promise<Response> {
   if (!res.ok) {
-    let detail = `Ошибка запроса (${res.status})`
+    const locale = i18n.global.locale.value as AppLocale
+    let detail = i18n.global.t('common.requestError', { status: res.status })
     try {
       const data = await res.json()
-      if (data?.detail) detail = data.detail
+      if (data?.detail) detail = translateApiError(data.detail, locale)
     } catch {
       // тело ответа не JSON – оставляем сообщение по умолчанию
     }

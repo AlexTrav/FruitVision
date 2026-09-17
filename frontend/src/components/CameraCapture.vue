@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { CameraIcon } from '@heroicons/vue/24/outline'
 
+const { t } = useI18n()
 const emit = defineEmits<{ capture: [file: File]; close: [] }>()
 
 const videoRef = ref<HTMLVideoElement | null>(null)
@@ -17,7 +19,7 @@ async function startCamera() {
     })
     if (videoRef.value) videoRef.value.srcObject = stream
   } catch {
-    error.value = 'Не удалось получить доступ к камере – проверь разрешения браузера'
+    error.value = t('cameraCapture.permissionError')
   }
 }
 
@@ -73,13 +75,13 @@ onBeforeUnmount(stopCamera)
         @click="capture"
       >
         <CameraIcon class="h-4 w-4" />
-        Снять
+        {{ t('cameraCapture.capture') }}
       </button>
       <button
         class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400 dark:border-stone-700 dark:text-stone-300 dark:hover:border-stone-600"
         @click="emit('close')"
       >
-        Отмена
+        {{ t('cameraCapture.cancel') }}
       </button>
     </div>
   </div>

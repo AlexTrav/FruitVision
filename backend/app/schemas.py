@@ -1,16 +1,18 @@
 from pydantic import BaseModel
 
 
-# краткая информация о классе на двух языках (для /api/classes)
+# краткая информация о классе на трёх языках (для /api/classes)
 class ClassInfo(BaseModel):
     en: str
     ru: str
+    kk: str
 
 
 # одно предсказание модели с указанием уверенности
 class ClassPrediction(BaseModel):
     class_en: str
     class_ru: str
+    class_kk: str
     confidence: float
 
 

@@ -1,64 +1,56 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Cog6ToothIcon, CpuChipIcon, CubeIcon, PaintBrushIcon } from '@heroicons/vue/24/outline'
 import { fetchClasses, fetchModelInfo } from '../api/client'
+import { useLocale } from '../composables/useLocale'
 import type { ClassInfo, ModelInfo } from '../types'
+import { pickByLocale } from '../utils/localizeClass'
+
+const { t } = useI18n()
+const { locale } = useLocale()
 
 const modelInfo = ref<ModelInfo | null>(null)
 const classes = ref<ClassInfo[]>([])
 const error = ref<string | null>(null)
 
 // шаги пайплайна обучения – из ноутбука model/training/fruit_vegetable_classification.ipynb
-const pipeline = [
-  {
-    title: 'Сбор и очистка данных',
-    text: 'Датасет "Fruit and Vegetable Image Recognition" с Kaggle: 36 классов, уже разбит на train / validation / test.',
-  },
-  {
-    title: 'Аугментация и нормализация',
-    text: 'Случайные отражения, повороты, зум и контраст – только на train. Пиксели приводятся к диапазону, ожидаемому MobileNetV2.',
-  },
-  {
-    title: 'Балансировка классов',
-    text: 'Веса классов (class weights) считаются по частоте в train, чтобы редкие классы не игнорировались при обучении.',
-  },
-  {
-    title: 'Обучение CNN',
-    text: 'Baseline-сеть с нуля для сравнения, затем transfer learning на MobileNetV2 с дообучением верхних слоёв (fine-tuning).',
-  },
-  {
-    title: 'Валидация и подбор гиперпараметров',
-    text: 'Перебор learning rate и dropout по val_accuracy, финальная проверка на test: classification report и confusion matrix.',
-  },
-]
+const pipeline = computed(() => [
+  { title: t('about.pipelineStep1Title'), text: t('about.pipelineStep1Text') },
+  { title: t('about.pipelineStep2Title'), text: t('about.pipelineStep2Text') },
+  { title: t('about.pipelineStep3Title'), text: t('about.pipelineStep3Text') },
+  { title: t('about.pipelineStep4Title'), text: t('about.pipelineStep4Text') },
+  { title: t('about.pipelineStep5Title'), text: t('about.pipelineStep5Text') },
+])
 
 // точность baseline-модели и итоговой transfer-learning модели из ноутбука (для наглядного сравнения)
 const baselineAccuracy = 0.68
 const transferAccuracy = 0.92
 
-// стек технологий проекта по слоям – для карточек на странице
-const techStack = [
+// стек технологий проекта по слоям – для карточек на странице (названия инструментов не переводятся,
+// это имена собственные)
+const techStack = computed(() => [
   {
     icon: CpuChipIcon,
-    category: 'Модель / ML',
+    category: t('about.techModel'),
     items: ['Python', 'TensorFlow / Keras', 'MobileNetV2', 'NumPy', 'scikit-learn', 'Google Colab (GPU)'],
   },
   {
     icon: Cog6ToothIcon,
-    category: 'Бэкенд',
+    category: t('about.techBackend'),
     items: ['FastAPI', 'Uvicorn', 'Pydantic', 'Pillow', 'pytest'],
   },
   {
     icon: PaintBrushIcon,
-    category: 'Фронтенд',
+    category: t('about.techFrontend'),
     items: ['Vue 3', 'TypeScript', 'Vite', 'Tailwind CSS', 'vue-router'],
   },
   {
     icon: CubeIcon,
-    category: 'Инфраструктура',
+    category: t('about.techInfra'),
     items: ['Docker', 'docker-compose', 'nginx', 'Makefile'],
   },
-]
+])
 
 // подгружаем метаданные модели и список классов с бэкенда при открытии страницы
 onMounted(async () => {
@@ -67,7 +59,7 @@ onMounted(async () => {
     modelInfo.value = info
     classes.value = list
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Не удалось загрузить данные о модели'
+    error.value = e instanceof Error ? e.message : t('about.loadError')
   }
 })
 </script>
@@ -75,10 +67,8 @@ onMounted(async () => {
 <template>
   <div class="mx-auto max-w-5xl px-5 py-14">
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="text-3xl font-bold text-stone-900 sm:text-4xl dark:text-stone-50">О проекте</h1>
-      <p class="mt-3 text-stone-500 dark:text-stone-400">
-        Как устроен пайплайн – от датасета до модели, которая отвечает на запросы этого сайта.
-      </p>
+      <h1 class="text-3xl font-bold text-stone-900 sm:text-4xl dark:text-stone-50">{{ t('about.title') }}</h1>
+      <p class="mt-3 text-stone-500 dark:text-stone-400">{{ t('about.subtitle') }}</p>
     </div>
 
     <p
@@ -91,24 +81,24 @@ onMounted(async () => {
     <!-- карточки с параметрами модели и сравнением точности -->
     <section class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
       <div v-reveal class="rounded-3xl border border-stone-200 bg-white p-6 dark:border-stone-800 dark:bg-stone-900">
-        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-50">Архитектура модели</h2>
+        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-50">{{ t('about.architectureTitle') }}</h2>
         <dl class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between border-b border-stone-100 pb-2 dark:border-stone-800">
-            <dt class="text-stone-500 dark:text-stone-400">Модель</dt>
+            <dt class="text-stone-500 dark:text-stone-400">{{ t('about.modelLabel') }}</dt>
             <dd class="font-medium text-stone-800 dark:text-stone-200">{{ modelInfo?.architecture ?? '–' }}</dd>
           </div>
           <div class="flex justify-between border-b border-stone-100 pb-2 dark:border-stone-800">
-            <dt class="text-stone-500 dark:text-stone-400">Размер входа</dt>
+            <dt class="text-stone-500 dark:text-stone-400">{{ t('about.inputSizeLabel') }}</dt>
             <dd class="font-medium text-stone-800 dark:text-stone-200">
               {{ modelInfo ? `${modelInfo.image_size[0]}×${modelInfo.image_size[1]}` : '–' }}
             </dd>
           </div>
           <div class="flex justify-between border-b border-stone-100 pb-2 dark:border-stone-800">
-            <dt class="text-stone-500 dark:text-stone-400">Классов</dt>
+            <dt class="text-stone-500 dark:text-stone-400">{{ t('about.classesLabel') }}</dt>
             <dd class="font-medium text-stone-800 dark:text-stone-200">{{ modelInfo?.num_classes ?? '–' }}</dd>
           </div>
           <div class="flex justify-between pb-2">
-            <dt class="text-stone-500 dark:text-stone-400">Точность на test</dt>
+            <dt class="text-stone-500 dark:text-stone-400">{{ t('about.accuracyLabel') }}</dt>
             <dd class="font-medium text-brand-700 dark:text-brand-400">
               {{ modelInfo ? `${Math.round(modelInfo.test_accuracy * 100)}%` : '–' }}
             </dd>
@@ -117,13 +107,13 @@ onMounted(async () => {
       </div>
 
       <div v-reveal class="rounded-3xl border border-stone-200 bg-white p-6 dark:border-stone-800 dark:bg-stone-900">
-        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-50">Baseline CNN vs Transfer Learning</h2>
-        <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">Точность на тестовой выборке</p>
+        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-50">{{ t('about.comparisonTitle') }}</h2>
+        <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">{{ t('about.comparisonSubtitle') }}</p>
 
         <div class="mt-5 space-y-4">
           <div>
             <div class="flex justify-between text-sm">
-              <span class="text-stone-600 dark:text-stone-300">CNN с нуля</span>
+              <span class="text-stone-600 dark:text-stone-300">{{ t('about.baselineLabel') }}</span>
               <span class="font-medium text-stone-800 dark:text-stone-200">{{ Math.round(baselineAccuracy * 100) }}%</span>
             </div>
             <div class="mt-1 h-2.5 overflow-hidden rounded-full bg-stone-100 dark:bg-stone-800">
@@ -132,7 +122,7 @@ onMounted(async () => {
           </div>
           <div>
             <div class="flex justify-between text-sm">
-              <span class="text-stone-600 dark:text-stone-300">MobileNetV2 (fine-tuned)</span>
+              <span class="text-stone-600 dark:text-stone-300">{{ t('about.transferLabel') }}</span>
               <span class="font-medium text-brand-700 dark:text-brand-400">{{ Math.round(transferAccuracy * 100) }}%</span>
             </div>
             <div class="mt-1 h-2.5 overflow-hidden rounded-full bg-stone-100 dark:bg-stone-800">
@@ -148,7 +138,7 @@ onMounted(async () => {
 
     <!-- шаги пайплайна обучения модели -->
     <section class="mt-16">
-      <h2 v-reveal class="text-center text-2xl font-bold text-stone-900 dark:text-stone-50">Пайплайн обучения</h2>
+      <h2 v-reveal class="text-center text-2xl font-bold text-stone-900 dark:text-stone-50">{{ t('about.pipelineTitle') }}</h2>
       <ol class="mx-auto mt-8 max-w-2xl space-y-5">
         <li
           v-for="(step, i) in pipeline"
@@ -172,7 +162,7 @@ onMounted(async () => {
 
     <!-- стек технологий проекта, сгруппированный по слоям -->
     <section class="mt-16">
-      <h2 v-reveal class="text-center text-2xl font-bold text-stone-900 dark:text-stone-50">Технологии проекта</h2>
+      <h2 v-reveal class="text-center text-2xl font-bold text-stone-900 dark:text-stone-50">{{ t('about.techStackTitle') }}</h2>
       <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div
           v-for="(group, i) in techStack"
@@ -205,7 +195,7 @@ onMounted(async () => {
     <!-- список всех классов, полученный напрямую с бэкенда -->
     <section class="mt-16">
       <h2 v-reveal class="text-center text-2xl font-bold text-stone-900 dark:text-stone-50">
-        36 классов, которые узнаёт модель
+        {{ t('about.classesListTitle') }}
       </h2>
       <div v-reveal class="mt-8 flex flex-wrap justify-center gap-2">
         <span
@@ -213,14 +203,14 @@ onMounted(async () => {
           :key="cls.en"
           class="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-sm text-stone-600 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300"
         >
-          {{ cls.ru }}
+          {{ pickByLocale(cls.ru, cls.en, cls.kk, locale) }}
         </span>
       </div>
     </section>
 
     <!-- автор проекта -->
     <section class="mt-16 text-center" v-reveal>
-      <p class="text-sm uppercase tracking-wide text-stone-400 dark:text-stone-500">Автор проекта</p>
+      <p class="text-sm uppercase tracking-wide text-stone-400 dark:text-stone-500">{{ t('about.authorLabel') }}</p>
       <p class="mt-1 text-xl font-semibold text-stone-900 dark:text-stone-50">Алексей Нерезов</p>
     </section>
   </div>

@@ -4,6 +4,7 @@ export interface HistoryItem {
   thumbnail: string // маленький JPEG в виде data URL
   classRu: string
   classEn: string
+  classKk: string
   confidence: number
   isRecognized: boolean
   timestamp: number

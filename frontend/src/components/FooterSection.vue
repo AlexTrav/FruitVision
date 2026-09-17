@@ -1,14 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+</script>
 
 <template>
   <footer class="border-t border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950">
     <div
       class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-sm text-stone-500 sm:flex-row sm:items-center sm:justify-between dark:text-stone-400"
     >
-      <p>FruitVision – учебный проект по компьютерному зрению.</p>
+      <p>{{ t('footer.tagline') }}</p>
       <!-- ссылка на исходный датасет с Kaggle, на котором обучена модель -->
       <p class="flex flex-wrap items-center gap-1">
-        Датасет:
+        {{ t('footer.datasetLabel') }}
         <a
           href="https://www.kaggle.com/datasets/kritikseth/fruit-and-vegetable-image-recognition"
           target="_blank"

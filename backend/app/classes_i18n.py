@@ -1,0 +1,90 @@
+# соответствие английских названий классов датасета русским и казахским, для отображения на фронтенде
+CLASS_NAME_RU: dict[str, str] = {
+    "apple": "Яблоко",
+    "banana": "Банан",
+    "beetroot": "Свёкла",
+    "bell pepper": "Болгарский перец",
+    "cabbage": "Капуста",
+    "capsicum": "Перец (капсикум)",
+    "carrot": "Морковь",
+    "cauliflower": "Цветная капуста",
+    "chilli pepper": "Перец чили",
+    "corn": "Кукуруза",
+    "cucumber": "Огурец",
+    "eggplant": "Баклажан",
+    "garlic": "Чеснок",
+    "ginger": "Имбирь",
+    "grapes": "Виноград",
+    "jalepeno": "Перец халапеньо",
+    "kiwi": "Киви",
+    "lemon": "Лимон",
+    "lettuce": "Салат латук",
+    "mango": "Манго",
+    "onion": "Лук",
+    "orange": "Апельсин",
+    "paprika": "Паприка",
+    "pear": "Груша",
+    "peas": "Горох",
+    "pineapple": "Ананас",
+    "pomegranate": "Гранат",
+    "potato": "Картофель",
+    "raddish": "Редис",
+    "soy beans": "Соевые бобы",
+    "spinach": "Шпинат",
+    "sweetcorn": "Сладкая кукуруза",
+    "sweetpotato": "Батат",
+    "tomato": "Помидор",
+    "turnip": "Репа",
+    "watermelon": "Арбуз",
+}
+
+# казахские названия – эмпирически подобраны по стандартной сельскохозяйственной лексике,
+# рекомендуется сверить с носителем языка перед публичным использованием (см. SUMMARY.md)
+CLASS_NAME_KK: dict[str, str] = {
+    "apple": "Алма",
+    "banana": "Банан",
+    "beetroot": "Қызылша",
+    "bell pepper": "Болгар бұрышы",
+    "cabbage": "Қырыққабат",
+    "capsicum": "Бұрыш (капсикум)",
+    "carrot": "Сәбіз",
+    "cauliflower": "Гүлді қырыққабат",
+    "chilli pepper": "Ащы бұрыш",
+    "corn": "Жүгері",
+    "cucumber": "Қияр",
+    "eggplant": "Баялды",
+    "garlic": "Сарымсақ",
+    "ginger": "Имбир",
+    "grapes": "Жүзім",
+    "jalepeno": "Халапеньо бұрышы",
+    "kiwi": "Киви",
+    "lemon": "Лимон",
+    "lettuce": "Жапырақты салат",
+    "mango": "Манго",
+    "onion": "Пияз",
+    "orange": "Апельсин",
+    "paprika": "Паприка",
+    "pear": "Алмұрт",
+    "peas": "Бұршақ",
+    "pineapple": "Ананас",
+    "pomegranate": "Анар",
+    "potato": "Картоп",
+    "raddish": "Редиска",
+    "soy beans": "Соя бұршағы",
+    "spinach": "Шпинат",
+    "sweetcorn": "Тәтті жүгері",
+    "sweetpotato": "Батат",
+    "tomato": "Қызанақ",
+    "turnip": "Шалғам",
+    "watermelon": "Қарбыз",
+}
+
+
+# переводит английское имя класса в русское; если перевода нет – возвращает как есть
+def to_ru(class_name: str) -> str:
+    return CLASS_NAME_RU.get(class_name, class_name)
+
+
+# переводит английское имя класса в казахское; если перевода нет – возвращает как есть
+def to_kk(class_name: str) -> str:
+    return CLASS_NAME_KK.get(class_name, class_name)

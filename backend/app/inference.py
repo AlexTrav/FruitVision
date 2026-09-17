@@ -4,7 +4,7 @@ import json
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from .classes_ru import to_ru
+from .classes_i18n import to_kk, to_ru
 from .config import CLASS_NAMES_PATH, MODEL_INFO_PATH, MODEL_PATH
 from .schemas import ClassPrediction, ModelInfo
 
@@ -58,7 +58,9 @@ class FruitVegClassifier:
 
         def make_prediction(idx: int) -> ClassPrediction:
             name = self.class_names[idx]
-            return ClassPrediction(class_en=name, class_ru=to_ru(name), confidence=float(probs[idx]))
+            return ClassPrediction(
+                class_en=name, class_ru=to_ru(name), class_kk=to_kk(name), confidence=float(probs[idx])
+            )
 
         top3 = [make_prediction(i) for i in order[:3]]
         return top3[0], top3
