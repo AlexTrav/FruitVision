@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
+import { CameraIcon, ExclamationTriangleIcon, FireIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { explainImage, predictImage } from '../api/client'
 import CameraCapture from '../components/CameraCapture.vue'
 import ResultCard from '../components/ResultCard.vue'
@@ -125,10 +126,11 @@ onBeforeUnmount(() => {
 
         <button
           v-if="!showCamera && !previewUrl"
-          class="rounded-full border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700"
+          class="flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700"
           @click="showCamera = true"
         >
-          📷 Сделать фото с камеры
+          <CameraIcon class="h-4 w-4" />
+          Сделать фото с камеры
         </button>
 
         <div v-if="previewUrl" class="flex gap-3">
@@ -167,7 +169,7 @@ onBeforeUnmount(() => {
             v-else
             class="flex h-56 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed border-stone-300 p-6 text-center text-stone-400"
           >
-            <span class="text-3xl">🔎</span>
+            <MagnifyingGlassIcon class="h-8 w-8" />
             <p class="text-sm">Здесь появится результат после загрузки фото</p>
           </div>
         </Transition>
@@ -176,11 +178,12 @@ onBeforeUnmount(() => {
         <div v-if="result" class="rounded-3xl border border-stone-200 bg-white p-5">
           <button
             v-if="!heatmapUrl"
-            class="w-full rounded-full border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            class="flex w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="isExplaining"
             @click="showHeatmap"
           >
-            {{ isExplaining ? 'Строю тепловую карту…' : '🔥 Показать, куда смотрела модель' }}
+            <FireIcon v-if="!isExplaining" class="h-4 w-4" />
+            {{ isExplaining ? 'Строю тепловую карту…' : 'Показать, куда смотрела модель' }}
           </button>
 
           <div v-else>
@@ -208,10 +211,14 @@ onBeforeUnmount(() => {
           class="flex w-28 shrink-0 flex-col items-center gap-2 rounded-2xl border p-3 text-center"
           :class="item.isRecognized ? 'border-stone-200 bg-white' : 'border-amber-200 bg-amber-50'"
         >
-          <img :src="item.thumbnail" alt="" class="h-16 w-16 rounded-xl object-cover" />
-          <p class="w-full truncate text-xs font-medium text-stone-700">
-            <span v-if="!item.isRecognized">⚠️ </span>{{ item.classRu }}
-          </p>
+          <div class="relative">
+            <img :src="item.thumbnail" alt="" class="h-16 w-16 rounded-xl object-cover" />
+            <ExclamationTriangleIcon
+              v-if="!item.isRecognized"
+              class="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-amber-100 p-0.5 text-amber-600"
+            />
+          </div>
+          <p class="w-full truncate text-xs font-medium text-stone-700">{{ item.classRu }}</p>
           <p class="text-xs text-stone-400">{{ Math.round(item.confidence * 100) }}%</p>
         </div>
       </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import type { PredictionResponse } from '../types'
 
 defineProps<{ result: PredictionResponse }>()
@@ -19,7 +20,7 @@ function pct(value: number): string {
       v-if="!result.is_recognized"
       class="mb-5 flex items-start gap-3 rounded-2xl bg-amber-100 px-4 py-3 text-sm text-amber-800"
     >
-      <span class="text-lg leading-none">⚠️</span>
+      <ExclamationTriangleIcon class="h-5 w-5 shrink-0 text-amber-600" />
       <p>
         Модель не уверена, что на фото один из 36 известных ей фруктов или овощей. Ниже показан
         самый близкий вариант, но доверять ему не стоит.

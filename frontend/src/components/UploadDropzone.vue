@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { CameraIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits<{ select: [file: File] }>()
 
@@ -41,7 +42,7 @@ function openPicker() {
     @dragleave.prevent="isDragging = false"
     @drop.prevent="onDrop"
   >
-    <div class="text-4xl">📷</div>
+    <CameraIcon class="h-10 w-10 text-stone-400" />
     <p class="text-base font-medium text-stone-700">Перетащи фото сюда или нажми, чтобы выбрать</p>
     <p class="text-sm text-stone-400">JPG, PNG или WebP – до 8 МБ</p>
     <input ref="inputRef" type="file" accept="image/*" class="hidden" @change="onChange" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import LogoMark from './icons/LogoMark.vue'
 
 const isOpen = ref(false) // раскрыто ли мобильное меню
 
@@ -15,7 +16,7 @@ const links = [
   <header class="sticky top-0 z-50 border-b border-stone-200/70 bg-stone-50/80 backdrop-blur-md">
     <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
       <RouterLink to="/" class="flex items-center gap-2 text-lg font-semibold text-stone-900">
-        <span class="text-2xl">🥑</span>
+        <LogoMark class="h-7 w-7" />
         <span>Fruit<span class="text-brand-600">Vision</span></span>
       </RouterLink>
 

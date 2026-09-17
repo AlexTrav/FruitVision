@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { CameraIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits<{ capture: [file: File]; close: [] }>()
 
@@ -68,10 +69,11 @@ onBeforeUnmount(stopCamera)
     <div class="flex w-full gap-3">
       <button
         v-if="!error"
-        class="flex-1 rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+        class="flex flex-1 items-center justify-center gap-2 rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
         @click="capture"
       >
-        📸 Снять
+        <CameraIcon class="h-4 w-4" />
+        Снять
       </button>
       <button
         class="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-600 transition-colors hover:border-stone-400"

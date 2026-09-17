@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { Cog6ToothIcon, CpuChipIcon, CubeIcon, PaintBrushIcon } from '@heroicons/vue/24/outline'
 import { fetchClasses, fetchModelInfo } from '../api/client'
 import type { ClassInfo, ModelInfo } from '../types'
 
@@ -38,22 +39,22 @@ const transferAccuracy = 0.92
 // стек технологий проекта по слоям – для карточек на странице
 const techStack = [
   {
-    icon: '🧠',
+    icon: CpuChipIcon,
     category: 'Модель / ML',
     items: ['Python', 'TensorFlow / Keras', 'MobileNetV2', 'NumPy', 'scikit-learn', 'Google Colab (GPU)'],
   },
   {
-    icon: '⚙️',
+    icon: Cog6ToothIcon,
     category: 'Бэкенд',
     items: ['FastAPI', 'Uvicorn', 'Pydantic', 'Pillow', 'pytest'],
   },
   {
-    icon: '🎨',
+    icon: PaintBrushIcon,
     category: 'Фронтенд',
     items: ['Vue 3', 'TypeScript', 'Vite', 'Tailwind CSS', 'vue-router'],
   },
   {
-    icon: '🐳',
+    icon: CubeIcon,
     category: 'Инфраструктура',
     items: ['Docker', 'docker-compose', 'nginx', 'Makefile'],
   },
@@ -177,8 +178,10 @@ onMounted(async () => {
           class="rounded-3xl border border-stone-200 bg-white p-6"
           :style="{ transitionDelay: `${i * 60}ms` }"
         >
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">{{ group.icon }}</span>
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <component :is="group.icon" class="h-5 w-5" />
+            </div>
             <h3 class="font-semibold text-stone-900">{{ group.category }}</h3>
           </div>
           <div class="mt-4 flex flex-wrap gap-2">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { AcademicCapIcon, CameraIcon, CheckCircleIcon, CpuChipIcon } from '@heroicons/vue/24/outline'
+
 // ключевые цифры проекта для блока статистики
 const stats = [
   { value: '36', label: 'классов фруктов и овощей' },
@@ -9,17 +11,17 @@ const stats = [
 // три шага в блоке "как это работает"
 const steps = [
   {
-    icon: '📸',
+    icon: CameraIcon,
     title: 'Загрузи фото',
     text: 'Перетащи изображение фрукта или овоща или выбери файл с устройства.',
   },
   {
-    icon: '🧠',
+    icon: CpuChipIcon,
     title: 'Модель анализирует',
     text: 'Свёрточная нейросеть обрабатывает изображение и считает вероятность каждого из 36 классов.',
   },
   {
-    icon: '✅',
+    icon: CheckCircleIcon,
     title: 'Получи результат',
     text: 'Видишь предсказанный класс, уверенность модели и ближайшие альтернативы.',
   },
@@ -43,7 +45,8 @@ const steps = [
         <span
           class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700"
         >
-          🎓 Рубежное задание · Computer Vision
+          <AcademicCapIcon class="h-4 w-4" />
+          Рубежное задание · Computer Vision
         </span>
 
         <h1 class="mt-6 text-4xl font-bold tracking-tight text-stone-900 sm:text-6xl">
@@ -98,7 +101,9 @@ const steps = [
           class="rounded-3xl border border-stone-200 bg-white p-6 transition-shadow hover:shadow-lg"
           :style="{ transitionDelay: `${i * 80}ms` }"
         >
-          <div class="text-3xl">{{ step.icon }}</div>
+          <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+            <component :is="step.icon" class="h-6 w-6" />
+          </div>
           <h3 class="mt-4 text-lg font-semibold text-stone-900">{{ step.title }}</h3>
           <p class="mt-2 text-sm leading-relaxed text-stone-500">{{ step.text }}</p>
         </div>
